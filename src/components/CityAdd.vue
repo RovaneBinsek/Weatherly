@@ -1,13 +1,15 @@
 <template>
 <div>
-  <button v-if="!visible" v-on:click="visible = !visible">ADD CITY</button>
+  <button class="add-city" v-if="!visible" v-on:click="visible = !visible">ADD CITY</button>
    <teleport  to="body">
      <div class="modal"  v-if="visible">
        <div class="modal-content">
-        <span>City name</span>
-        <input v-model="city" type="text"/>
+        <div class="header">ADD CITY</div>
+        <div class="form-row">
+          <input v-model="cityName" type="text"/>
+        </div>
         <div>
-        <button  v-on:click="$emit('add', city)">ADD</button>
+        <button  v-on:click="addCity(); visible = !visible">ADD</button>
         <button  v-on:click="visible = !visible">CANCEL</button>
        </div>
 
@@ -27,10 +29,16 @@ export default {
   emmits:{
     add: null,
   },
-  setup(){
+  setup(props, { emit }){
     var visible = ref(false);
+    var cityName = ref("");
 
-    return{visible}
+    const addCity = () => {
+      emit('add', cityName.value);
+      cityName.value = "";
+    }
+
+    return{ visible, addCity, cityName }
   }
 }
 </script>
@@ -55,12 +63,31 @@ export default {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 20%;
+  width: 300px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.header{
+  font-size: 24px;
+  margin: 15px;
+}
+
+.form-row input{
+  margin: 10px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 button{
   width: 100px;
   padding: 10px;
   margin: 5px;
+  margin-bottom: 20px;
+}
+
+.add-city{
+  margin-top: 40px
 }
 </style>
